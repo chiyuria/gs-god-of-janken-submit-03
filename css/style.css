@@ -7,12 +7,6 @@
   font-family: "Roboto";
   src: url("../font/Roboto-Regular.ttf") format("truetype");
 }
-
-@font-face {
-  font-family: "Cinzel";
-  src: url("../font/Cinzel-VariableFont_wght.ttf") format("truetype");
-}
-
 .roboto {
   font-family: "Roboto", sans-serif;
 }
@@ -389,7 +383,7 @@ button {
   }
   .oracle-panel {
     margin-top: 3rem;
-    height: 24rem;
+    height: 30rem;
   }
   header img,
   .center-column,
@@ -433,10 +427,11 @@ button {
     width: 40%;
   }
   .slump-wrap {
-    margin-top: 3rem;
+    margin-top: 8rem;
   }
   .data {
     padding: 1rem 2rem;
+    margin-bottom: 3rem;
   }
 }
 
