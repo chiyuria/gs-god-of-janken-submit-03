@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <script src="./js/jquery-2.1.3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>SLOT God of Janken</title>
+  </head>
+  <body>
+    <header></header>
+
+    <div class="all-columns">
+      <div class="left-column" style="grid-area: left">
+        <div class="oracle-panel">
+          <div class="oracle-title roboto">Oracles</div>
+          <div class="oracle-frame">
+            <div id="oracle">
+              Rock-paper-scissors is strange. Win or lose, no one’s life truly
+              changes...<br />
+              Yet in this very moment, it feels as if something might shift,
+              doesn’t it?<br />
+              It is nothing but an illusion.<br /><br />
+              じゃんけんとは奇妙だ。勝っても負けても、誰も人生は変わらぬ。<br />
+              だが今この瞬間だけは……変わる気がするだろ？<br />
+              気のせいであるが。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="center-column" style="grid-area: center">
+        <div class="game-seg">
+          <div id="count" class="game-seg-items">
+            <span class="label roboto">Game</span><span class="value">000</span>
+          </div>
+          <div class="rush-lamp">
+            <img src="./img/rush_lamp.png" alt="" />
+          </div>
+          <div id="point" class="game-seg-items">
+            <span class="label roboto">Point</span><span class="value">0</span>
+          </div>
+        </div>
+
+        <main>
+          <div class="display-wrapper">
+            <div class="main-display">
+              <div class="seg-display">
+                <div id="payout" class="seg-display-items">
+                  <div class="label roboto">Payout</div>
+                  <div class="value">00</div>
+                </div>
+                <div id="coin" class="seg-display-items">
+                  <div class="label roboto">Credit</div>
+                  <div class="value">0</div>
+                </div>
+              </div>
+
+              <div class="rush">
+                <div class="rush-in">
+                  <img src="./img/jankenRush.jpg" alt="ラッシュ突入画像" />
+                </div>
+              </div>
+              <img
+                id="mdisplay"
+                class="initial"
+                src="./img/title.png"
+                alt="タイトル画面"
+              />
+            </div>
+            <div class="sub-display">
+              <div id="sub-msg" class="sub-msg roboto">Insert Coins</div>
+            </div>
+          </div>
+
+          <div class="hands">
+            <img id="gu_btn" src="./img/GU_2.png" alt="グー" />
+            <img id="cho_btn" src="./img/CHO_2.png" alt="チョキ" />
+            <img id="par_btn" src="./img/PAR_2.png" alt="パー" />
+          </div>
+
+          <div class="btn-container">
+            <button id="bet">
+              <img src="./img/BET.png" alt="BETボタン" />
+            </button>
+            <button id="lending">
+              <img src="./img/50.png" alt="貸出ボタン" />
+            </button>
+          </div>
+        </main>
+      </div>
+
+      <div class="right-column" style="grid-area: right">
+        <div class="slump-wrap">
+          <div class="graph-title roboto">Net Gain Curve</div>
+          <canvas id="slumpGraph"></canvas>
+        </div>
+        <div class="data">
+          <div class="data-title roboto">Play Data</div>
+          <div class="data-panel">
+            <div class="data-items">
+              <div class="data-label lend">Lending Total</div>
+              <div class="data-value lend">0</div>
+            </div>
+            <div class="data-items">
+              <div class="data-label diff">Net Gain</div>
+              <div class="data-value diff">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer></footer>
+    <script src="./js/main.js"></script>
+  </body>
+</html>

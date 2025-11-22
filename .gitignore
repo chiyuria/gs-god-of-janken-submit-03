@@ -1,0 +1,12 @@
+# 除外フォルダ
+dev/
+archive/
+trash/
+tests/
+dev/
+school/
+*.zip
+
+# 設定ファイル系
+*.log
+.vscode/
