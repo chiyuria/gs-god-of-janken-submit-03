@@ -6,125 +6,395 @@
 
 # ②課題内容（どんな作品か）
 
-* じゃんけんゲームにスロットの要素を組み合わせた **jQueryベースのゲーム**
-* 勝敗に応じたポイントとコインを管理し、200pt 到達でボーナスラッシュに突入
-* **Chart.js を使用したスランプグラフ（差枚推移）のリアルタイム描画機能を実装**
-* メインディスプレイ内に **Credit / Payout のセグメント風表示** を埋め込み
-* Oracle（神語録）として、勝敗ごとにランダムテキストを表示する演出付き
+* じゃんけんとスロットを合体させた **jQuery製ブラウザゲーム**
+* 勝敗ポイント＋レア抽選で天井到達 → **ボーナスラッシュ突入**
+* **Chart.js** によるスランプグラフをリアルタイム描画
+* クレジット / ペイアウト の **セグメント表示** を筐体風に実装
+* Oracle（神語録）メッセージで演出強化
+* 画像は **AI生成素材** を使用
 
 ---
 
 # ③アプリのデプロイURL
 
-https://chiyuria.github.io/gs-god-of-janken-submit-03/
+[https://chiyuria.github.io/gs-god-of-janken-submit-03/](https://chiyuria.github.io/gs-god-of-janken-submit-03/)
 
 ---
 
-# ④アプリのログイン用IDまたはPassword（ある場合）
+# ④アプリのログイン用IDまたはPassword
 
-* なし
+なし
 
 ---
 
 # ⑤工夫した点・こだわった点
 
-* **スランプグラフの実装（今回のアップデートの主軸）**
-
-  * ゲームごとに差枚を記録し、Chart.jsでリアルタイム更新
-  * アスペクト比・親要素との干渉などを調整し、崩れずに描画されるよう最適化
-* **コイン払出しを“1枚ずつ増えて見える”アニメーションに**
-
-  * スロットらしい体験のために setInterval を用いて段階的に反映
-* **UIの筐体化**
-
-  * メイン画面にセグメント風の Credit / Payout 表示を埋め込み
-  * Oracle パネルを左カラムに追加してゲーム性を強化
-* **勝敗・ボーナスに応じた Oracle メッセージのランダム生成**
-
-  * Win / Draw / Lose / Bonus の4カテゴリで文章を大量に定義
+* **スランプグラフのリアルタイム更新（Chart.js）**
+* **1枚ずつ増えるコイン払出しアニメーション**
+* **可変天井システム**（1 / 50 / 100 / 200 / 400pt）
+* **スマホロングタップデバッグ**、PCデバッグキー（B / D / C）
+* じゃんけん勝利時の **レア役抽選テーブル** を自作
+* メインディスプレイ上に **セグメント液晶を重ねるUI構成**
 
 ---
 
-# ⑥難しかった点・次回トライしたいこと（又は機能）
+# ⑥難しかった点・次回トライしたいこと
 
-* Chart.js の縦伸び・リサイズ挙動を制御する点
-* メインディスプレイへ UI を重ねる際の position 調整
-* Oracleメッセージを外部JSON化して管理性を上げたい
-* スロット演出をさらに強化（前兆・フェイク前兆・点滅アニメなど）
+* Chart.js のサイズ制御が難しい
+* メイン表示に各UIを重ねるレイアウト調整
+* ボーナス抽選と天井抽選のバランス最適化
+* Oracle メッセージの JSON 外部管理
+* 前兆・フェイク前兆など “スロット的な期待感” を追加したい
 
 ---
 
-# ⑦フリー項目（感想、シェアしたいこと等なんでも）
+# ⑦フリー項目（感想等）
 
-* **[感想]**
-  jQueryのイベント処理・状態管理に加え、Chart.js の導入で
-  「UIの動的変化」「アニメーション」「リアルタイムグラフ」など幅広い学びが得られた。
-  単なるじゃんけんではなく、スロット的な“遊び感”をどこまで再現できるかをテーマに制作した。
+* jQuery と Chart.js を組み合わせた UI 制御の理解が深まった
+* スロットの “体感” を再現するための演出作りが特に楽しかった
+* 可変天井やレア役など、ちょっとした確率設計が学びになった
 
-* **[参考記事]**
-　特になし
+---
+
+# 🎮 **How to Play（遊び方）**
+
+## 1. コインを貸し出す
+
+画面左上の **「Lending」ボタン** を押すと、
+一度に **+50 コイン** が追加されます。
+
+最初の軍資金として必要なので、まずは貸し出しからスタート。
+
+---
+
+## 2. BET（ベット）する
+
+**「BET」ボタン** を押すと、
+**3コイン消費 → 1ゲーム開始** になります。
+
+BETすると画面中央のメインディスプレイで
+「じゃん→けん」演出が始まり、操作を受け付ける状態に。
+
+---
+
+## 3. 手を選ぶ
+
+手札ボタン
+✊ グー
+✌ チョキ
+✋ パー
+
+のいずれかをタップ。
+
+---
+
+## 4. 勝敗判定
+
+勝敗によって以下が決まります：
+
+| 結果      | ポイント         | コイン(通常)  |
+| ------- | ------------ | -------- |
+| **勝ち**  | +3pt（＋レア役抽選） | +4       |
+| **あいこ** | +0pt         | +3（リプレイ） |
+| **負け**  | +0pt         | +0       |
+
+勝ったときのみレア役抽選が発生し、
+大量ポイント獲得のチャンスも存在します。
+
+---
+
+## 5. 天井ポイントに到達すると…
+
+ゲーム中に貯まる **gamePoint** が
+可変天井（1 / 50 / 100 / 200 / 400 pt）に達すると演出発生：
+
+* メインディスプレイに **「RUSH IN」**
+* スマホは **vibrate（ぶぶぶーん）** 演出
+* Oracle がボーナス用メッセージに切り替わる
+
+この状態（mode=9）で次のゲームに備えます。
+
+---
+
+## 6. 次の BET でボーナスラッシュ突入
+
+天井到達後、再度 BET を押すと
+**20G のボーナスラッシュ** が開始（mode=1）。
+
+ボーナス中は以下のように強化：
+
+| 内容      | 通常        | ボーナス            |
+| ------- | --------- | --------------- |
+| ペイアウト   | 4 / 3 / 0 | **15 / 3 / 0**  |
+| CPU手の補正 | 完全ランダム    | 2/3でプレイヤー勝利に寄せる |
+| ランプ     | RUSHランプ点灯 | 常時点灯            |
+
+---
+
+## 7. ボーナス終了 → 通常へ戻る
+
+20G消化でボーナス終了。
+
+* モードが通常に戻り
+* カウンタ表示リセット
+* **新しい天井が再抽選される**
+
+この繰り返し。
+
+---
+
+## 8. スランプグラフで差枚をチェック
+
+画面下部にチャートがあり、
+「貸出枚数 vs 現在のコイン」の差＝差枚（diff）をリアルタイムで反映。
+
+スロットのように
+**右肩上がり・右肩下がり** を楽しみながら遊べる。
+
+---
+
+## 9. スマホ & PC のデバッグ（開発者用）
+
+### ▼ PC
+
+* **B** → 強制ボーナスモード
+* **D** → 天井即到達
+* **C** → 現在の天井（pointCeiling）を確認
+
+### ▼ スマホ
+
+* **ラッシュランプ長押し2秒** → 天井到達
+* バイブ通知で成功がわかる
+
+---
+
+# 🟦 **How to Play**
+
+## 1. Add Coins
+
+Press the **“Lending”** button to add **+50 coins** at once.
+Use this as your initial bankroll.
+
+---
+
+## 2. Place a BET
+
+Press **“BET”** to start a game.
+BET consumes **3 coins** and begins the round.
+
+---
+
+## 3. Choose Your Hand
+
+Tap one of the hand buttons:
+
+* ✊ Rock
+* ✌ Scissors
+* ✋ Paper
+
+---
+
+## 4. Battle Result
+
+Your outcome determines points and payouts:
+
+| Result   | Points              | Coins (Normal) |
+| -------- | ------------------- | -------------- |
+| **Win**  | +3pt (+Rare Chance) | +4             |
+| **Draw** | +0pt                | +3             |
+| **Lose** | +0pt                | 0              |
+
+Rare bonuses may occur **only when you win**.
+
+---
+
+## 5. Reach the Point Ceiling
+
+The game has a **variable ceiling**
+(1 / 50 / 100 / 200 / 400 pts).
+
+When your total points reach the ceiling:
+
+* Bonus entrance animation appears
+* Smartphone vibrates
+* Oracle displays special Bonus messages
+
+The game enters **Bonus Ready mode (mode 9)**.
+
+---
+
+## 6. Bonus Rush
+
+Press BET again to enter a **20-round Bonus Rush**.
+
+During Bonus:
+
+| Content   | Normal    | Bonus                        |
+| --------- | --------- | ---------------------------- |
+| Payout    | 4 / 3 / 0 | **15 / 3 / 0**               |
+| CPU bias  | Random    | Favors player (2/3 win rate) |
+| Rush Lamp | Off       | **On**                       |
+
+---
+
+## 7. Bonus Ends
+
+When 20 rounds finish:
+
+* Mode returns to normal
+* Counters reset
+* A **new ceiling is drawn**
+
+---
+
+## 8. Slump Graph
+
+The bottom chart displays **current coin – total lending**,
+just like a pachislot “net gain graph”.
+
+Tracks upward/downward trends in real time.
+
+---
+
+## 9. Debug Tools
+
+### For PC
+
+* **B** → Force Bonus
+* **D** → Force Ceiling
+* **C** → Show Current Ceiling
+
+### For Mobile
+
+* **Long Press (2 sec) the Rush Lamp** → Force Ceiling
+* Vibration feedback indicates success
 
 ---
 
 # SLOT – God of Janken
 
-じゃんけんスロットアプリ（課題作品）
+じゃんけん × スロットゲーム（jQuery課題作品）
 
 ---
 
 ## 📝 概要
 
-本リポジトリは、スクール課題として制作した **jQueryベースのじゃんけんスロットゲーム** です。
-じゃんけんにスロット要素を組み合わせ、コイン管理・ボーナスラッシュなどを実装しています。
+本リポジトリは、**jQuery を用いて制作したスロット風じゃんけんゲーム**です。
+通常じゃんけんに「ポイント管理」「天井」「ボーナスラッシュ」「レア役抽選」などの要素を追加し、スロットのゲーム性を再現しています。
 
-今回のアップデートでは **スランプグラフ（差枚推移）** を新規実装し、
-さらに **コイン払い出しが1枚ずつ増えていくアニメーション** を追加することで、
-より“筐体らしい体験”を再現しました。
+さらに今回のアップデートでは **スランプグラフ（差枚推移）** を Chart.js でリアルタイム描画し、
+UI面でもメインディスプレイに **クレジット・ペイアウトのセグメント表示** を重ねるなど、筐体らしい世界観を作り込みました。
+
+※画像素材はすべて **AI生成** を使用。
 
 ---
 
 ## 🎮 機能一覧
 
+### ▼ 基本ゲーム
+
 * グー / チョキ / パー の選択
 * BET（3コイン消費）
 * コイン貸出（+50）
-* 勝敗とレア抽選によるポイント加算
-* 200pt 到達でボーナス準備
-* 次の BET で 20G ボーナスラッシュ
-* **スランプグラフ（差枚推移）のリアルタイム描画**
-* **コイン払出しの段階的アニメーション**
-* Oracle（神語録）ランダム表示（Win / Lose / Draw / Bonus）
+* 勝敗に応じたポイント & コイン処理
+* **勝利時のみレア抽選が発生**
+* 天井ポイントに到達するとボーナス準備（mode=9）
+* 次回BETで **20Gボーナスラッシュ** に突入
+
+### ▼ UI / 演出
+
+* メイン画面にセグメント風の Credit / Payout 表示
+* Oracle（神語録）のランダムメッセージ表示
+* 払い出し（payout）とコイン増加の段階アニメーション
+* スランプグラフ（差枚）をリアルタイム更新
+* スマホ向けにレイアウト最適化
+
+### ▼ デバッグ
+
+* **Bキー：強制ボーナス**
+* **Dキー：天井到達**
+* **Cキー：天井ポイント確認**
+* スマホは **ラッシュランプ長押し（2秒）で天井到達**
 
 ---
 
-## 🔥 今回の主なアップデート
+## 🔥 主なアップデート
 
-* **スランプグラフ（Chart.js）を導入し、差枚推移をリアルタイム可視化**
-* **コイン1枚ずつ増えるアニメーションを新実装**（払い出し演出を強化）
-* Oracle（神語録）システムを追加してゲーム性を拡張
-* UIレイアウトの調整（左カラムに Oracle パネル追加、セグ液晶をメイン画面に配置）
+### 1. 可変天井（pointCeiling）
+
+```js
+function drawCeiling() {
+  const r = Math.random();
+  if (r < 0.02) pointCeiling = 1;
+  else if (r < 0.10) pointCeiling = 50;
+  else if (r < 0.35) pointCeiling = 100;
+  else if (r < 0.70) pointCeiling = 200;
+  else pointCeiling = 400;
+}
+```
+
+---
+
+### 2. レア役抽選のテーブル強化
+
+```js
+if (result == 1) {
+  const rare = Math.ceil(Math.random() * 8192);
+  if (rare >= 8180) gamePoint = pointCeiling;
+  else if (rare >= 8080) gamePoint += 147;
+  else if (rare >= 7800) gamePoint += 67;
+  else if (rare >= 6200) gamePoint += 12;
+}
+```
+
+---
+
+### 3. スマホ用ロングタップデバッグ
+
+```js
+$(".rush-lamp").on("touchstart", function () {
+  longTap = 0;
+  debugTimer = setTimeout(function () {
+    gamePoint = pointCeiling;
+    vibrateLong();
+    longTap = 1;
+  }, 2000);
+});
+
+$(".rush-lamp").on("touchend touchmove touchcancel", function () {
+  clearTimeout(debugTimer);
+});
+```
+
+---
+
+### 4. バイブレーション
+
+* 通常：25ms
+* ボーナス： [20,20,20,20,300]
+* ロングタップ成功：100ms
 
 ---
 
 ## 🧩 使用技術
 
-* HTML5 / CSS3
-* jQuery 2.1.3
+* HTML / CSS
+* jQuery
 * Chart.js
-* CSSアニメーション
-* セグメント風フォント
+* CSS animation
+* AI生成素材（img/）
 
 ---
 
-## 🕹 ゲームの流れ
+## 🕹 ゲームフロー
 
-1. コイン貸出（+50）
-2. BET（3コイン消費）
-3. じゃんけん選択
-4. ポイント・コイン処理（勝敗＋レア抽選）
-5. 200pt → ボーナス準備（mode=9）
-6. 次のBET → ボーナスラッシュ（20G）
-7. スランプグラフ・Oracle がリアルタイムで更新
+1. 貸出（+50）
+2. BET（3枚消費）
+3. じゃんけん
+4. ポイント + レア抽選
+5. 天井到達で mode=9
+6. 次のBETでボーナスラッシュ（20G）
+7. スランプグラフがリアルタイム更新
 
 ---
 
@@ -137,7 +407,7 @@ https://chiyuria.github.io/gs-god-of-janken-submit-03/
 │   └── style.css
 ├── js/
 │   └── main.js
-├── img/
+├── img/   ← AI生成画像
 └── font/
 ```
 
@@ -145,27 +415,26 @@ https://chiyuria.github.io/gs-god-of-janken-submit-03/
 
 ## ▶ 動作方法
 
-1. リポジトリをクローン
-2. `index.html` をブラウザで開くだけ
-   （ローカルサーバ不要）
+1. このリポジトリをクローン
+2. ブラウザで `index.html` を開くだけ
 
 ---
 
 ## 📘 学習ポイント
 
-* jQuery のイベント処理・DOM操作
-* モード遷移と状態管理
-* ランダム抽選の実装
-* Chart.js を用いたリアルタイム描画
-* スロット風UIの構築
-* アニメーション制御（コイン増加など）
+* jQuery の DOM 操作・イベント制御
+* 状態管理とモード遷移の設計
+* ランダム処理・確率抽選
+* Chart.js を使ったリアルタイムグラフ描画
+* UI/UX の作り込み
+* スロット風のアニメーション・演出
 
 ---
 
 ## 📄 ライセンス
 
-本作品は学習目的で制作されたものです。
-画像素材・コードの無断使用はご遠慮ください。
+学習目的で制作。
+画像はすべて **AI生成素材**。
 
 ---
 
@@ -175,67 +444,116 @@ Chiyuria
 
 ---
 
----
-
 # SLOT – God of Janken
 
-Rock–Paper–Scissors Slot Game (Assignment Project)
+Rock–Paper–Scissors × Slot Machine Game (jQuery Project)
 
 ---
 
 ## 📝 Overview
 
-This repository contains a **jQuery-based Rock–Paper–Scissors slot game** created as a school assignment.
+This project is a **jQuery-based Rock–Paper–Scissors slot machine game**.
 
-In this update, a **Slump Graph (Net Gain Curve)** was newly implemented
-to visualize point progression in real time.
-Additionally, a **coin payout animation that increases one coin at a time**
-was added to enhance the slot-machine feel.
+Players bet coins, choose their hand, and accumulate points.
+When the player reaches a variable point ceiling, the game enters **Bonus Rush (20 rounds)**.
+
+The game includes a **real-time Slump Graph (net gain curve)** using Chart.js,
+as well as **segment-style displays** for Credit and Payout to emulate a real slot machine UI.
+
+All graphic assets are **AI-generated**.
 
 ---
 
 ## 🎮 Features
 
+### ▼ Gameplay
+
 * Rock / Scissors / Paper selection
 * BET (costs 3 coins)
 * Add Coins (+50)
-* Point calculation & rare chance bonuses
-* 200pt → Bonus Ready → Bonus Rush (20 rounds)
-* **Real-time Slump Graph (Chart.js)**
-* **Animated coin payout (increment one-by-one)**
-* Oracle message system (randomized Win / Lose / Draw / Bonus messages)
+* Point calculation based on RPS result
+* **Rare bonuses only on wins**
+* Variable point ceiling system
+* Bonus Rush (20 rounds)
+
+### ▼ UI / Effects
+
+* Segment-style Credit / Payout display
+* Random Oracle messages (Win / Lose / Draw / Bonus)
+* One-by-one coin payout animation
+* Real-time Slump Graph using Chart.js
+* Responsive layout for mobile
+
+### ▼ Debug Tools
+
+* **B** → Force Bonus Mode
+* **D** → Force Point Ceiling
+* **C** → Check current ceiling
+* Mobile: long press (2 sec) on Rush Lamp → Force ceiling
 
 ---
 
 ## 🔥 Major Update
 
-* **Added Slump Graph using Chart.js**
-* **Added one-by-one coin payout animation**
-* Implemented Oracle Message System
-* Added Oracle panel and segment-style displays to the layout
-* UI refinements
+### 1. Variable Point Ceiling
+
+```js
+function drawCeiling() {
+  const r = Math.random();
+  if (r < 0.02) pointCeiling = 1;
+  else if (r < 0.10) pointCeiling = 50;
+  else if (r < 0.35) pointCeiling = 100;
+  else if (r < 0.70) pointCeiling = 200;
+  else pointCeiling = 400;
+}
+```
+
+### 2. Rare Bonus Table
+
+```js
+if (result == 1) {
+  const rare = Math.ceil(Math.random() * 8192);
+  if (rare >= 8180) gamePoint = pointCeiling;
+  else if (rare >= 8080) gamePoint += 147;
+  else if (rare >= 7800) gamePoint += 67;
+  else if (rare >= 6200) gamePoint += 12;
+}
+```
+
+### 3. Mobile Long Press Debug
+
+```js
+$(".rush-lamp").on("touchstart", function () {
+  longTap = 0;
+  debugTimer = setTimeout(function () {
+    gamePoint = pointCeiling;
+    vibrateLong();
+    longTap = 1;
+  }, 2000);
+});
+```
 
 ---
 
 ## 🔧 Tech Stack
 
 * HTML5 / CSS3
-* jQuery 2.1.3
+* jQuery
 * Chart.js
-* CSS animation
-* Seven-segment-style font
+* CSS Animation
+* AI-generated images
 
 ---
 
 ## 🕹 Game Flow
 
-1. Add coins (+50)
-2. BET (costs 3 coins)
-3. Choose a hand
-4. Point & coin handling
-5. 200pt → Bonus Ready (mode=9)
+1. Add Coins
+2. BET
+3. Select Hand
+4. Points + Optional Rare Bonus
+5. Reach Ceiling → Bonus Ready
 6. Next BET → Bonus Rush (20 rounds)
-7. Graph & Oracle update dynamically
+7. Slump graph updates dynamically
 
 ---
 
@@ -248,7 +566,7 @@ was added to enhance the slot-machine feel.
 │   └── style.css
 ├── js/
 │   └── main.js
-├── img/
+├── img/   ← AI-generated
 └── font/
 ```
 
@@ -261,21 +579,21 @@ was added to enhance the slot-machine feel.
 
 ---
 
-## 📘 Learning Highlights
+## 📘 Learning Points
 
-* jQuery: events and DOM manipulation
-* State management
-* Random probability handling
-* Real-time visualization with Chart.js
+* jQuery event handling & DOM manipulation
+* State & mode management
+* Randomized probability implementation
+* Real-time graph rendering with Chart.js
 * UI layout construction
-* Animation control (coin payout)
+* Animation control for coin payout
 
 ---
 
 ## 📄 License
 
-This project was created for educational purposes.
-Unauthorized redistribution of code or image assets is prohibited.
+Created for educational purposes.
+All images are **AI-generated**.
 
 ---
 
