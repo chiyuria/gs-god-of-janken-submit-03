@@ -79,6 +79,19 @@ body {
   padding: 2rem 2rem;
 }
 
+/* ---QR--- */
+.qr-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 7rem;
+}
+.qr-code {
+  display: block;
+  width: 20rem;
+}
+
 /* ---MAIN DISPLAY--- */
 .display-wrapper {
   position: relative;
@@ -322,6 +335,7 @@ button {
   flex-direction: column;
 }
 .oracle-title,
+.qr-title,
 .data-title,
 .graph-title {
   font-size: 1.6rem;
@@ -427,11 +441,14 @@ button {
     width: 40%;
   }
   .slump-wrap {
-    margin-top: 8rem;
+    margin-top: 4rem;
   }
   .data {
     padding: 1rem 2rem;
     margin-bottom: 3rem;
+  }
+  .qr-wrap {
+    display: none;
   }
 }
 
