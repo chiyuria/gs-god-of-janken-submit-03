@@ -11,7 +11,11 @@ let bonusGame = 0; //ボーナスゲーム数管理変数
 let diff; //スランプグラフ描画のためupdateDiff()からグローバルへ
 let pointCeiling; //ポイント天井定義用変数を追加
 
-//-----スマホデバッグ用----//
+//----モードテーブル追加----//
+let modeTable = 0;
+let modeGame = 0;
+
+//----スマホデバッグ用----//
 let debugTimer;
 let longTap = 0;
 
@@ -133,6 +137,26 @@ function getOracle(type) {
   return list[Math.floor(Math.random() * list.length)];
 }
 
+function chanceOracle() {
+  const rand = Math.random();
+
+  if (modeTable === 1) {
+    if (rand < 0.1) {
+      $("#oracle").css("color", "#ff4545");
+    } else {
+      $("#oracle").css("color", "#ffffff");
+    }
+  } else if (modeTable === 2) {
+    if (rand < 0.1) {
+      $("#oracle").css("color", "#0055ff");
+    } else {
+      $("#oracle").css("color", "#ffffff");
+    }
+  } else {
+    $("#oracle").css("color", "#ffffff");
+  }
+}
+
 //---振動機能---//
 function vibrate() {
   navigator.vibrate(25);
@@ -207,9 +231,9 @@ $("#bet").on("click", function () {
 
   $("#sub-msg").html("");
 
-  $("#mdisplay").attr("src", "./img/jan.png").removeClass("initial");
+  $("#mdisplay").attr("src", "./img/jan.jpg").removeClass("initial");
   setTimeout(function () {
-    $("#mdisplay").attr("src", "./img/ken.png");
+    $("#mdisplay").attr("src", "./img/ken.jpg");
     $(".hands img").removeClass("no-click");
     $("#sub-msg").html("Choose Your Hands");
     handLock = 0; //handsロック解除
@@ -241,7 +265,7 @@ function playGame(userHand) {
   $("#sub-msg").html("");
 
   if (mode == 0) {
-    cpuHand = Math.ceil(Math.random() * 3);
+    cpuHand = drawCpuHand(userHand);
     gameCount += 1;
     const displayCount = String(gameCount).padStart(3, "0");
     $("#count .value").html(displayCount);
@@ -338,6 +362,8 @@ function playGame(userHand) {
 
   $("#point .value").html(gamePoint);
 
+  drawModeTable();
+
   let oracle = "";
   if (result === 1) {
     oracle = getOracle("win");
@@ -347,6 +373,7 @@ function playGame(userHand) {
     oracle = getOracle("lose");
   }
 
+  chanceOracle();
   $("#oracle").html(oracle);
 
   if (gamePoint >= pointCeiling) {
@@ -356,6 +383,8 @@ function playGame(userHand) {
       $("#oracle").html(getOracle("bonus"));
     }, 800);
     mode = 9; //一時的にボーナス準備状態にする、次のBETでボーナスに
+    modeTable = 0;
+    modeGame = 0;
   }
 
   //ボーナス終了判定
@@ -390,6 +419,73 @@ $("#cho_btn").on("click", function () {
 $("#par_btn").on("click", function () {
   playGame(3);
 });
+
+function drawCpuHand(userHand) {
+  if (modeTable == 0) {
+    return Math.ceil(Math.random() * 3);
+  }
+
+  if (modeTable == 1) {
+    const rand = Math.random();
+    if (rand < 0.6) {
+      if (userHand == 1) return 2;
+      if (userHand == 2) return 3;
+      if (userHand == 3) return 1;
+    } else {
+      return Math.ceil(Math.random() * 3);
+    }
+  }
+
+  if (modeTable == 2) {
+    const rand = Math.random();
+    if (rand < 0.6) {
+      if (userHand == 1) return 3;
+      if (userHand == 2) return 1;
+      if (userHand == 3) return 2;
+    } else {
+      return Math.ceil(Math.random() * 3);
+    }
+  }
+}
+
+//----モードテーブル抽選----//
+function drawModeTable() {
+  if (mode === 1 || mode === 9) return;
+
+  if (modeGame > 0) {
+    modeGame--;
+    return;
+  }
+
+  const rand = Math.random();
+
+  //5%で高確率・低確率テーブル移行
+  if (modeTable === 0) {
+    if (rand < 0.05) {
+      modeTable = 1;
+      modeGame = 10;
+    } else if (rand < 0.1) {
+      modeTable = 2;
+      modeGame = 10;
+    }
+  }
+
+  //80%で通常テーブルに転落
+  else if (modeTable === 1) {
+    if (rand < 0.8) {
+      modeTable = 0;
+      modeGame = 0;
+    }
+  }
+
+  //50％で通常テーブルに復帰
+  else if (modeTable === 2) {
+    if (rand < 0.5) {
+      modeTable = 0;
+      modeGame = 0;
+    }
+  }
+}
 
 function updateDiff() {
   diff = coin - lendingTotal;
@@ -436,7 +532,7 @@ function coinAnime() {
     } else {
       updateDiff();
       diffLog.push(diff);
-      console.log("diffLog:", diffLog);
+      // console.log("diffLog:", diffLog);
 
       slumpChart.options.scales.y.max = upperDiffScale;
       slumpChart.options.scales.y.min = lowerDiffScale;
@@ -518,6 +614,13 @@ $(window).on("keydown", function (e) {
   }
 });
 
+$(window).on("keydown", function (e) {
+  if (e.key === "m" || e.key === "M") {
+    console.log("modeTable: ", modeTable);
+    console.log("modeGame: ", modeGame);
+  }
+});
+
 //---Ceiling Check---//
 $(window).on("keydown", function (e) {
   if (e.key === "c" || e.key === "C") {
@@ -543,6 +646,6 @@ $(".rush-lamp").on("touchstart", function () {
   }, 2000);
 });
 
-$(".rush-lamp").on("touchend touchmove touchcancel",function(){
+$(".rush-lamp").on("touchend touchmove touchcancel", function () {
   clearTimeout(debugTimer);
 });
