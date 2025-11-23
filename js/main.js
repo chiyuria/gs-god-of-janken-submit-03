@@ -3,12 +3,17 @@ let gameCount = 0; //ゲーム数のカウント
 let gamePoint = 0; //勝敗によるポイントカウント
 let lendingTotal = 0; //総貸出枚数
 let bet = 0; //BET状態を管理する変数
-let handLock = 0;//クリック連打回避用
+let handLock = 0; //クリック連打回避用
 let coin = 0; //コインポイント
 let payout = 0; //払い出し枚数
 let mode = 0; //モード変数
 let bonusGame = 0; //ボーナスゲーム数管理変数
 let diff; //スランプグラフ描画のためupdateDiff()からグローバルへ
+let pointCeiling; //ポイント天井定義用変数を追加
+
+//-----スマホデバッグ用----//
+let debugTimer;
+let longTap = 0;
 
 //----コイン増加アニメ用変数群----//
 let payStartValue;
@@ -25,9 +30,9 @@ let upperDiffScale = 100;
 let lowerDiffScale = -100;
 
 const pointTable = {
-  1: 3, //勝ちは3pt
-  2: 1, //あいこも1pt
-  3: 1, //負けでも1pt
+  1: 3, //勝ちのみ3ptに変更
+  2: 0,
+  3: 0,
 };
 const cpuHandsTable = {
   1: "グー",
@@ -50,9 +55,28 @@ const coinTableBonus = {
   3: 0,
 };
 
+//---天井抽選---//
+$(document).ready(function () {
+  drawCeiling();
+});
+
+function drawCeiling() {
+  const r = Math.random();
+  if (r < 0.02) {
+    pointCeiling = 1;
+  } else if (r < 0.1) {
+    pointCeiling = 50;
+  } else if (r < 0.35) {
+    pointCeiling = 100;
+  } else if (r < 0.7) {
+    pointCeiling = 200;
+  } else {
+    pointCeiling = 400;
+  }
+}
+
 // ----ORACLE----//
 const oracles = {
-
   win: [
     "Well done, mortal. Victory is but a fleeting spark—enjoy it while it lasts.<br><br>よくやったな、汝。勝利とは一瞬の煌めきである。今のうちに誇れ。",
     "You won as you were meant to. But don’t get cocky—you could easily lose next.<br><br>勝つべくして勝った。だが油断するな。次は普通に負ける可能性がある。",
@@ -102,7 +126,6 @@ const oracles = {
     "Remember this high… you may never feel it again!!<br><br>汝よ…この高揚を覚えておけ……二度と味わえぬ可能性もある故になッ！！",
     "Earn, earn, earn!! Money runs fast—catch it!!<br><br>稼げ稼げ稼げェェ！！！金は逃げ足が速いぞ！！",
   ],
-
 };
 
 function getOracle(type) {
@@ -116,12 +139,13 @@ function vibrate() {
   console.log("vibrated");
 }
 
+function vibrateLong() {
+  navigator.vibrate(100);
+  console.log("vibrated long");
+}
+
 function vibrateBonus() {
-  navigator.vibrate([
-    20, 20,
-    20, 20,
-    300
-  ]);
+  navigator.vibrate([20, 20, 20, 20, 300]);
   console.log("vibrated bonus");
 }
 
@@ -188,7 +212,7 @@ $("#bet").on("click", function () {
     $("#mdisplay").attr("src", "./img/ken.png");
     $(".hands img").removeClass("no-click");
     $("#sub-msg").html("Choose Your Hands");
-    handLock = 0;//handsロック解除
+    handLock = 0; //handsロック解除
   }, 800);
 });
 
@@ -278,14 +302,14 @@ function playGame(userHand) {
     gamePoint += pointTable[result];
     if (result == 1) {
       const rare = Math.ceil(Math.random() * 8192);
-      if (rare >= 8190) {
-        gamePoint = 200;
-      } else if (rare >= 8109) {
-        gamePoint += 97;
-      } else if (rare >= 7947) {
-        gamePoint += 47;
-      } else if (rare >= 6327) {
-        gamePoint += 7;
+      if (rare >= 8180) {
+        gamePoint = pointCeiling;
+      } else if (rare >= 8080) {
+        gamePoint += 147;
+      } else if (rare >= 7800) {
+        gamePoint += 67;
+      } else if (rare >= 6200) {
+        gamePoint += 12;
       }
     }
   } else if (mode == 1) {
@@ -325,7 +349,7 @@ function playGame(userHand) {
 
   $("#oracle").html(oracle);
 
-  if (gamePoint >= 200) {
+  if (gamePoint >= pointCeiling) {
     setTimeout(function () {
       $(".rush-in").addClass("rush-in-animate");
       vibrateBonus();
@@ -342,6 +366,7 @@ function playGame(userHand) {
     $("#count .label").html("Game");
     $("#count .value").html("000");
     $("#count .value").css("color", "#ff0000");
+    drawCeiling();
   }
 
   //BET状態解除（演出用ウエイト追加）
@@ -465,14 +490,13 @@ $(function () {
   });
 });
 
-
 //---debug mode---//
-$(window).on("keydown", function(e){
-  if(e.key === "b" || e.key === "B") {
-    if (bet === 1){
+$(window).on("keydown", function (e) {
+  if (e.key === "b" || e.key === "B") {
+    if (bet === 1) {
       return;
     }
-    if (mode === 1 || mode === 9){
+    if (mode === 1 || mode === 9) {
       return;
     }
     mode = 9;
@@ -480,16 +504,45 @@ $(window).on("keydown", function(e){
   }
 });
 
-$(window).on("keydown", function(e){
-  if(e.key === "d" || e.key === "D") {
-    if (bet === 1){
+$(window).on("keydown", function (e) {
+  if (e.key === "d" || e.key === "D") {
+    if (bet === 1) {
       return;
     }
-    if (mode === 1 || mode === 9){
+    if (mode === 1 || mode === 9) {
       return;
     }
-    gamePoint = 199;
+    gamePoint = pointCeiling;
     $("#point .value").html(gamePoint);
     console.log("add point (debug mode)");
   }
+});
+
+//---Ceiling Check---//
+$(window).on("keydown", function (e) {
+  if (e.key === "c" || e.key === "C") {
+    console.log(pointCeiling);
+  }
+});
+
+//----スマホ用デバッグ----//
+$(".rush-lamp").on("touchstart", function () {
+  if (bet === 1) {
+    return;
+  }
+  if (mode === 1 || mode === 9) {
+    return;
+  }
+  longTap = 0;
+  debugTimer = setTimeout(function () {
+    gamePoint = pointCeiling;
+    $("#point .value").html(gamePoint);
+    vibrateLong();
+    longTap = 1;
+    console.log("add point (debug mode)");
+  }, 2000);
+});
+
+$(".rush-lamp").on("touchend touchmove touchcancel",function(){
+  clearTimeout(debugTimer);
 });
