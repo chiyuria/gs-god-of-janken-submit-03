@@ -112,12 +112,16 @@ function getOracle(type) {
 
 //---振動機能---//
 function vibrate() {
-  navigator.vibrate(40);
+  navigator.vibrate(25);
   console.log("vibrated");
 }
 
 function vibrateBonus() {
-  navigator.vibrate(400);
+  navigator.vibrate([
+    20, 20,
+    20, 20,
+    300
+  ]);
   console.log("vibrated bonus");
 }
 
