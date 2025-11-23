@@ -387,7 +387,7 @@ button {
 }
 
 /* ---RESPONSIVE--- */
-@media (max-width: 768px) {
+@media (hover: none) and (pointer: coarse) {
   .all-columns {
     grid-template-columns: 100%;
     grid-template-areas:
@@ -395,10 +395,12 @@ button {
       "left"
       "right";
   }
+
   .oracle-panel {
     margin-top: 3rem;
     height: 30rem;
   }
+
   header img,
   .center-column,
   .display-wrapper,
@@ -408,47 +410,60 @@ button {
   .game-seg {
     width: 100%;
   }
+
   .game-seg-items .label {
     font-size: 1.2rem;
   }
+
   .game-seg-items .value {
     font-size: 2.4rem;
   }
+
   .seg-display-items .value {
     font-size: 1.6rem;
   }
+
   .sub-display {
     width: 55%;
     height: 3rem;
   }
+
   .sub-msg {
     font-size: 1.6rem;
   }
+
   .hands {
     margin-top: 3rem;
   }
+
   .btn-container {
     margin-top: 1.4rem;
   }
+
   .btn-container img {
     width: 70%;
   }
+
   .hands img {
     width: 100%;
     padding: 5%;
   }
+
   .rush-lamp img {
     width: 40%;
   }
+
   .slump-wrap {
     margin-top: 4rem;
   }
+
   .data {
     padding: 1rem 2rem;
     margin-bottom: 3rem;
   }
+
   .qr-wrap {
-    display: none;
+    display: none !important;
   }
 }
 
