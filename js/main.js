@@ -3,6 +3,7 @@ let gameCount = 0; //ゲーム数のカウント
 let gamePoint = 0; //勝敗によるポイントカウント
 let lendingTotal = 0; //総貸出枚数
 let bet = 0; //BET状態を管理する変数
+let handLock = 0;//クリック連打回避用
 let coin = 0; //コインポイント
 let payout = 0; //払い出し枚数
 let mode = 0; //モード変数
@@ -109,6 +110,17 @@ function getOracle(type) {
   return list[Math.floor(Math.random() * list.length)];
 }
 
+//---振動機能---//
+function vibrate() {
+  navigator.vibrate(40);
+  console.log("vibrated");
+}
+
+function vibrateBonus() {
+  navigator.vibrate(400);
+  console.log("vibrated bonus");
+}
+
 //----コイン貸出イベント----//
 $("#lending").on("click", function () {
   coin += 50;
@@ -118,6 +130,7 @@ $("#lending").on("click", function () {
   $("#lendTotal .value").html(lendingTotal);
   $(".data-value.lend").html(lendingTotal); //データ表示用に追加
 
+  vibrate();
   updateDiff();
 
   $("#sub-msg").html("Place Your Bet");
@@ -137,6 +150,7 @@ $("#bet").on("click", function () {
 
   //BET状態に
   bet = 1;
+  vibrate();
   $(".hands img").addClass("no-click");
   $("#bet").addClass("no-click");
   $("#lending").addClass("no-click");
@@ -170,6 +184,7 @@ $("#bet").on("click", function () {
     $("#mdisplay").attr("src", "./img/ken.png");
     $(".hands img").removeClass("no-click");
     $("#sub-msg").html("Choose Your Hands");
+    handLock = 0;//handsロック解除
   }, 800);
 });
 
@@ -178,9 +193,16 @@ function playGame(userHand) {
     alert("BETしてください");
     return;
   }
+  if (handLock == 1) {
+    return;
+  } else if (handLock == 0) {
+    handLock = 1;
+  }
 
   slumpGameCount++; //スランプグラフ描画用にインクリメント追加
   gameLog.push(slumpGameCount);
+
+  vibrate();
 
   let result;
   let cpuHand; //bonusロジック搭載のため宣言のみ
@@ -302,6 +324,7 @@ function playGame(userHand) {
   if (gamePoint >= 200) {
     setTimeout(function () {
       $(".rush-in").addClass("rush-in-animate");
+      vibrateBonus();
       $("#oracle").html(getOracle("bonus"));
     }, 800);
     mode = 9; //一時的にボーナス準備状態にする、次のBETでボーナスに
@@ -323,7 +346,7 @@ function playGame(userHand) {
     $("#bet").removeClass("no-click");
     $("#lending").removeClass("no-click");
     $("#sub-msg").html("Place Your Bet");
-  }, 1800);
+  }, 1400);
 }
 
 //クリックイベント
@@ -436,4 +459,33 @@ $(function () {
       },
     },
   });
+});
+
+
+//---debug mode---//
+$(window).on("keydown", function(e){
+  if(e.key === "b" || e.key === "B") {
+    if (bet === 1){
+      return;
+    }
+    if (mode === 1 || mode === 9){
+      return;
+    }
+    mode = 9;
+    console.log("bonus mode on (debug mode)");
+  }
+});
+
+$(window).on("keydown", function(e){
+  if(e.key === "d" || e.key === "D") {
+    if (bet === 1){
+      return;
+    }
+    if (mode === 1 || mode === 9){
+      return;
+    }
+    gamePoint = 199;
+    $("#point .value").html(gamePoint);
+    console.log("add point (debug mode)");
+  }
 });
