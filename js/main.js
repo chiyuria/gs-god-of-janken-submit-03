@@ -238,9 +238,9 @@ $("#bet").on("click", function () {
 
   $("#sub-msg").html("");
 
-  $("#mdisplay").attr("src", "./img/jan.jpg").removeClass("initial");
+  $("#mdisplay").attr("src", "./img/jan.webp").removeClass("initial");
   setTimeout(function () {
-    $("#mdisplay").attr("src", "./img/ken.jpg");
+    $("#mdisplay").attr("src", "./img/ken.webp");
     $(".hands img").removeClass("no-click");
     $("#sub-msg").html("Choose Your Hands");
     handLock = 0; //handsロック解除
@@ -295,37 +295,37 @@ function playGame(userHand) {
   //ユーザーがグー
   if (userHand == 1 && cpuHand == 1) {
     result = 2;
-    $("#mdisplay").attr("src", "./img/gu_draw.jpg");
+    $("#mdisplay").attr("src", "./img/gu_draw.webp");
   } else if (userHand == 1 && cpuHand == 2) {
     result = 1;
-    $("#mdisplay").attr("src", "./img/cho_win.jpg");
+    $("#mdisplay").attr("src", "./img/cho_win.webp");
   } else if (userHand == 1 && cpuHand == 3) {
     result = 3;
-    $("#mdisplay").attr("src", "./img/par_lose.jpg");
+    $("#mdisplay").attr("src", "./img/par_lose.webp");
   }
 
   //ユーザーがチョキ
   else if (userHand == 2 && cpuHand == 1) {
     result = 3;
-    $("#mdisplay").attr("src", "./img/gu_lose.jpg");
+    $("#mdisplay").attr("src", "./img/gu_lose.webp");
   } else if (userHand == 2 && cpuHand == 2) {
     result = 2;
-    $("#mdisplay").attr("src", "./img/cho_draw.jpg");
+    $("#mdisplay").attr("src", "./img/cho_draw.webp");
   } else if (userHand == 2 && cpuHand == 3) {
     result = 1;
-    $("#mdisplay").attr("src", "./img/par_win.jpg");
+    $("#mdisplay").attr("src", "./img/par_win.webp");
   }
 
   //ユーザーがパー
   else if (userHand == 3 && cpuHand == 1) {
     result = 1;
-    $("#mdisplay").attr("src", "./img/gu_win.jpg");
+    $("#mdisplay").attr("src", "./img/gu_win.webp");
   } else if (userHand == 3 && cpuHand == 2) {
     result = 3;
-    $("#mdisplay").attr("src", "./img/cho_lose.jpg");
+    $("#mdisplay").attr("src", "./img/cho_lose.webp");
   } else if (userHand == 3 && cpuHand == 3) {
     result = 2;
-    $("#mdisplay").attr("src", "./img/par_draw.jpg");
+    $("#mdisplay").attr("src", "./img/par_draw.webp");
   }
 
   if (mode == 0) {
