@@ -33,6 +33,10 @@ let slumpChart = null;
 let upperDiffScale = 100;
 let lowerDiffScale = -100;
 
+//----プレイデータ用変数群----//
+let bonusCount = 0;
+let maxCoins = 0;
+
 const pointTable = {
   1: 3, //勝ちのみ3ptに変更
   2: 0,
@@ -176,6 +180,7 @@ function vibrateBonus() {
 //----コイン貸出イベント----//
 $("#lending").on("click", function () {
   coin += 50;
+  getMaxCoins();
   $("#coin .value").html(coin);
 
   lendingTotal += 50;
@@ -215,6 +220,8 @@ $("#bet").on("click", function () {
     $("#point .value").html(gamePoint);
     $("#point .value").css("color", "#6a6a6a");
     gameCount = 0;
+    bonusCount += 1;
+    $(".data-value.bonus").html(bonusCount);
     bonusGame = 20;
     $("#count .label").html("LAST");
     const rushCount = String(bonusGame).padStart(3, "0");
@@ -253,6 +260,7 @@ function playGame(userHand) {
 
   slumpGameCount++; //スランプグラフ描画用にインクリメント追加
   gameLog.push(slumpGameCount);
+  $(".data-value.total-game").html(slumpGameCount);
 
   vibrate();
 
@@ -354,6 +362,7 @@ function playGame(userHand) {
     coinAnime();
   } else {
     updateDiff();
+    getMaxCoins();
     diffLog.push(diff);
     slumpChart.options.scales.y.max = upperDiffScale;
     slumpChart.options.scales.y.min = lowerDiffScale;
@@ -487,6 +496,13 @@ function drawModeTable() {
   }
 }
 
+function getMaxCoins() {
+  if (coin > maxCoins) {
+    maxCoins = coin;
+    $(".data-value.max").html(maxCoins);
+  }
+}
+
 function updateDiff() {
   diff = coin - lendingTotal;
   if (diff > 0) {
@@ -531,6 +547,7 @@ function coinAnime() {
       setTimeout(loop, 60);
     } else {
       updateDiff();
+      getMaxCoins();
       diffLog.push(diff);
       // console.log("diffLog:", diffLog);
 
