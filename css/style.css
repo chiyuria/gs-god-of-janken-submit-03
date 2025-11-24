@@ -334,6 +334,12 @@ button {
 #diffCoin .value {
   font-family: var(--segfont), monospace;
   color: #ff0000;
+  text-shadow: 0 0 3px rgba(255, 0, 0, 0.7), 0 0 6px rgba(255, 0, 0, 0.5);
+}
+
+.seg-off {
+  color: #1a1a1a !important;
+  text-shadow: none !important;
 }
 
 /* ---RIGHT COLUMN--- */
@@ -524,5 +530,39 @@ button {
   }
   to {
     transform: translateY(0%);
+  }
+}
+
+/* ボーナス用演出 */
+.blink {
+  animation: blink 1.2s infinite steps(1);
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 0.25;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* レア役用演出 */
+.flash {
+  animation: flash 240ms ease-in-out;
+}
+
+@keyframes flash {
+  0% {
+    filter: brightness(2.2);
+  }
+  100% {
+    filter: brightness(1);
   }
 }

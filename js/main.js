@@ -163,7 +163,7 @@ function chanceOracle() {
 
 //---振動機能---//
 function vibrate() {
-  navigator.vibrate(25);
+  navigator.vibrate(20);
   console.log("vibrated");
 }
 
@@ -173,7 +173,7 @@ function vibrateLong() {
 }
 
 function vibrateBonus() {
-  navigator.vibrate([20, 20, 20, 20, 300]);
+  navigator.vibrate([20, 20, 20, 20, 20, 20, 20, 20, 400]);
   console.log("vibrated bonus");
 }
 
@@ -217,8 +217,8 @@ $("#bet").on("click", function () {
     mode = 1; //ボーナス突入
     $(".rush-lamp").addClass("on");
     gamePoint = 0;
-    $("#point .value").html(gamePoint);
-    $("#point .value").css("color", "#6a6a6a");
+    $("#point .value").html(String(gamePoint).padStart(3, "0"));
+    $("#point .value").addClass("seg-off");
     gameCount = 0;
     bonusCount += 1;
     $(".data-value.bonus").html(bonusCount);
@@ -226,7 +226,7 @@ $("#bet").on("click", function () {
     $("#count .label").html("LAST");
     const rushCount = String(bonusGame).padStart(3, "0");
     $("#count .value").html(rushCount);
-    $("#count .value").css("color", "#b73bff");
+    $("#count .value").addClass("blink");
   }
   payout = 0;
   $("#payout .value").html("00");
@@ -336,12 +336,16 @@ function playGame(userHand) {
       const rare = Math.ceil(Math.random() * 8192);
       if (rare >= 8180) {
         gamePoint = pointCeiling;
+        rareFlash();
       } else if (rare >= 8080) {
         gamePoint += 147;
+        rareFlash();
       } else if (rare >= 7800) {
         gamePoint += 67;
+        rareFlash();
       } else if (rare >= 6200) {
         gamePoint += 12;
+        rareFlash();
       }
     }
   } else if (mode == 1) {
@@ -369,7 +373,7 @@ function playGame(userHand) {
     slumpChart.update();
   }
 
-  $("#point .value").html(gamePoint);
+  $("#point .value").html(String(gamePoint).padStart(3, "0"));
 
   drawModeTable();
 
@@ -400,10 +404,10 @@ function playGame(userHand) {
   if (mode == 1 && bonusGame == 0) {
     mode = 0;
     $(".rush-lamp").removeClass("on");
-    $("#point .value").css("color", "#ff0000");
+    $("#point .value").removeClass("seg-off");
     $("#count .label").html("Game");
     $("#count .value").html("000");
-    $("#count .value").css("color", "#ff0000");
+    $("#count .value").removeClass("blink");
     drawCeiling();
   }
 
@@ -603,6 +607,17 @@ $(function () {
   });
 });
 
+//----演出----//
+function rareFlash() {
+  setTimeout(function () {
+    $(".main-display").addClass("flash");
+    navigator.vibrate([60]);
+    setTimeout(function () {
+      $(".main-display").removeClass("flash");
+    }, 260);
+  }, 60);
+}
+
 //---debug mode---//
 $(window).on("keydown", function (e) {
   if (e.key === "b" || e.key === "B") {
@@ -626,7 +641,7 @@ $(window).on("keydown", function (e) {
       return;
     }
     gamePoint = pointCeiling;
-    $("#point .value").html(gamePoint);
+    $("#point .value").html(String(gamePoint).padStart(3, "0"));
     console.log("add point (debug mode)");
   }
 });
@@ -656,7 +671,7 @@ $(".rush-lamp").on("touchstart", function () {
   longTap = 0;
   debugTimer = setTimeout(function () {
     gamePoint = pointCeiling;
-    $("#point .value").html(gamePoint);
+    $("#point .value").html(String(gamePoint).padStart(3, "0"));
     vibrateLong();
     longTap = 1;
     console.log("add point (debug mode)");
